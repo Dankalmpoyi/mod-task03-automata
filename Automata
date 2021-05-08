@@ -1,0 +1,351 @@
+#include <conio.h>
+#include <iostream>
+#include "1.h"
+#include <string>
+ 
+using namespace std;
+ 
+Automata::Automata()
+{
+    printState();
+};
+ 
+void Automata::on()
+{
+    cout << "Do you want to turn on the machine? yes/no" << endl;
+    cin >> resolve;
+    if (resolve == "yes")
+    {
+        cout << "Hello! The machine is on." << endl;
+        state = WAIT;
+        printState();
+    }
+    else
+    {
+        cout << "Good bye!" << endl;
+    }
+};
+ 
+void Automata::off()
+{
+    cout << "Automat off\n" << endl;
+    cin >> state;
+    if (state == 6)
+        state = 1;
+        printState();
+};
+ 
+void Automata::wait()
+{
+    cout << "Vibirite count: \n" << endl;
+    cin >> state;
+    if (state == 6)
+        state = 2;
+}
+ 
+void Automata::accept()
+{
+    cout << "Vibirite count: \n" << endl;
+    cin >> state;
+    if (state == 2)
+        state = 3;
+};
+ 
+void Automata::coin(int cash)
+{   
+    cash += monies;
+    cout << "На вашем счету " << cash << " монет.\n" << endl;
+};
+ 
+void Automata::printMenu()
+{
+    string menu[7] = {"Coffee", "Tea", "Espresso", "Cappuccino", "Us", "Chocolate", "Latte"};
+    
+    int prices[7] = {15, 20, 20, 25, 30, 25, 30};
+    
+    for(x = 0; x < 7; x++) {
+    cout << x + 1 << ". " << menu[x] << "\t" << prices[x] << " руб." << endl;
+    };
+    x = 0;
+};
+ 
+void Automata::printState()
+{
+    switch (state)
+    {
+    case(OFF):
+        cout << "The machine does not work" << endl;
+        on();
+        break;
+ 
+    case(WAIT):
+        cout << "Wait... " << endl;
+ 
+    case(ACCEPT):
+        cout << "Insert money" << endl;
+        cin >> monies;
+        if (monies < 1000)
+        {
+            coin(monies);
+            printMenu();
+            cout << "Choose a drink" << endl;
+            cin >> x;
+            choice(x);
+            break;
+        }
+        else
+        {
+            cout << "Maximum cash = 1000.\nEnter the amount again" << endl;
+            cin >> monies;
+            coin(monies);
+            printMenu();
+            cout << "Choose a drink" << endl;
+            cin >> x;
+            choice(x);
+ 
+        }
+ 
+    case(STATES::CHECK):
+        cout << "Wait... We check the funds on the account" << endl;
+        check();
+        break;
+ 
+    case(STATES::COOK):
+        cout << "Cooking... Cooking " << endl;
+        finish();
+        break;
+    }
+};
+ 
+/*void Automata::printState()
+{
+    switch (state)
+    {
+    case 1:
+        cout << "\n OFF" << endl;
+        cash = 0;
+        turned_off();
+        break;
+    case 2:
+        cout << "\n WAIT" << endl;
+        turn_off();
+        break;
+    case 3:
+        cout << "\n ACCEPT" << endl;
+        cin >> money;
+        coin(money);
+ 
+        cout << "Выберите напиток: " << endl;
+        printMenu();
+        cin >> a; 
+        choice(a);
+        break;
+    case 4:
+        cout << "\n CHECK" << endl;
+        checking();
+        break;
+    case 5:
+        cout << "\n COOK" << endl;
+        finish();
+        break;
+    case 6:
+        cout << "\n ON" << endl;
+        cash = 1;
+        turn_off();     
+        break;
+    default:
+        cout << "\n Nepravilniy vvod!!!" << endl;
+        break;
+    };
+};*/
+ 
+void Automata::choice(int x)
+{
+    if ((x < 1) || (x > 7))
+    {
+        cout << "Not found this item" << endl;
+        cout << "Select a item from the list below:" << endl;
+        printMenu();
+        cout << "Choose a drink" << endl;
+        cin >> x;
+        choice(x);
+    }
+    else
+    {
+ 
+        cout << "Your choice - " << menu[x - 1] << endl;
+        state = STATES::CHECK;
+        printState();
+    }
+};
+void Automata::check()
+{
+}
+void Automata::check()
+{
+    if (cash >= prices[x - 1])
+    {
+        cash = cash - prices[x - 1];
+        cook();
+    }
+    else
+    {
+        cout << "There are not enough funds on your account. Refill your balance" << endl;
+        cancel();
+    };
+ 
+void Automata::cancel()
+{
+        cout << "\n Refunds: " << endl;
+        state = WAIT;
+        printState();
+}
+ 
+void Automata::cook()
+{
+    cout << "Wait... Your drink will be ready soon" << endl;
+    state = STATES::COOK;
+    printState();
+    
+    
+    if (prices == cash)
+        cout << "\n Drink gotovitsja" << endl;
+    else if (prices < cash)
+        cout << "\n Drink gotovitsja, you can keep the change" << endl;
+        printState();
+}
+ 
+void Automata::finish()
+{
+    cout << "Want something else? yes/no" << endl;
+    cin >> resolve;
+    if (resolve == "yes")
+    {
+        state = wait;
+        printState();
+    }
+    else 
+    {
+        system("cls");
+        cout<< "Thank you!" << endl;
+    }
+}
+ 
+void Automata::offauto()
+{
+    cout << "Do you want to turn off the machine? yes/no" << endl;
+    cin >> resolve;
+    if (resolve == "yes")
+    {
+        state = off;
+    }
+    else
+    {
+        cout << "On your account " << cash << endl;
+        state = STATES::accept;
+    }
+}
+ 
+void Automata::turn_off() {
+    cout << "Хотите отключить автомат? [Да/Нет]" << endl;
+    cin >> exit;
+    if (exit == "Нет") {
+        cout << "Сейчас на счету " << cash << " монет." << endl;
+        state = ACCEPT;
+        printState();
+    }
+    else {
+        cout << "Good Bye!" << endl;
+    }
+}
+ 
+void Automata::turned_off() {
+    cout << "Хотите включить? [Да/Нет]" << endl;
+    cin >> exit;
+ 
+    if (exit == "Да") {
+        on();
+    }
+}
+ 
+Automata::~Automata()
+{
+ 
+};
+ 
+ 
+Main.cpp
+#include<iostream>
+#include"1.h"
+ 
+using namespace std;
+ 
+int main()
+{
+    Automata();
+ 
+    system("pause");
+    return 0;
+}
+ 
+ 
+1.h
+ 
+#pragma once
+#include <iostream>
+using namespace std;
+ 
+enum STATES { ON, OFF, WAIT, ACCEPT, CHECK, COOK };
+    
+class Automata
+{
+private:
+    STATES state;
+    int x, cash, monies, prices;
+    string menu, resolve;
+ 
+    STATES floor = OFF;
+    int state = floor;
+    
+public:
+    Automata();
+    void on();
+    void off();
+    void wait();
+    void accept();
+    void coin(int cash);
+    void printMenu();
+    void printState();
+    void choice(int x);
+    void check();
+    void cancel();
+    void cook();
+    void finish();
+    void offauto();
+    void turned_off();
+    ~Automata();
+};
+ 
+ 
+ 
+[B][I][I][U]ОШИБКА:  [/U][/I][/I][/B]
+ 
+ 
+void Automata::check()
+{
+    if (cash >= prices[[U]x[/U] - 1]) [I][B]//ВЫРАЖЕНИЕ х ДОЛЖНО ИМЕТЬ ТИП УКАЗАТЕЛЯ НА ОБЪЕКТ[/B][/I]
+    {
+        cash = cash - prices[[U]x[/U] - 1];  [B][I]//ВЫРАЖЕНИЕ х ДОЛЖНО ИМЕТЬ ТИП УКАЗАТЕЛЯ НА ОБЪЕКТ[/I][/B]
+        cook();
+    }
+    else
+    {
+        cout << "There are not enough funds on your account. Refill your balance" << endl;
+        cancel();
+    };
+ 
+void Automata::[U]cancel[/U]()  [I]//  [B]функция-член Automata::cancel  не может быть объявлена вне соответствующего класса[/B]
+{[/I]
+        cout << "\n Refunds: " << endl;
+        state = WAIT;
+        printState();
